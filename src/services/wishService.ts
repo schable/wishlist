@@ -1,5 +1,5 @@
+import type { Wish } from '../routes/new-wish-list/_entities/Wish'
+
 export class WishService {
-	async save(): Promise<void> {
-		console.log('real save wish service method')
-	}
+	async save(wish: Wish): Promise<void> {}
 }

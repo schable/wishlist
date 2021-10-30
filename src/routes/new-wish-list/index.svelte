@@ -2,41 +2,42 @@
 	import type { LoadOutput } from '@sveltejs/kit'
 
 	import { WishService } from '../../services/wishService'
+	import { UuidGenerator } from '../../helpers/UuidGenerator'
 
 	export function load(): LoadOutput {
 		const wishService = new WishService()
+		const uuidGenerator = new UuidGenerator()
+
 		return {
 			props: {
 				wishService,
+				uuidGenerator,
 			},
 		}
 	}
 </script>
 
 <script lang='ts'>
+	export let wishService: WishService
+	export let uuidGenerator: UuidGenerator
+
 	import WishForm from './_components/NewWishForm.svelte'
+	import { Wish } from './_entities/Wish'
 
-	export let wishService
-	let wishForms: WishForm[] = [WishForm]
+	let wishes: Wish[] = [new Wish(uuidGenerator.generate())]
 
-	const saveWish = (blurEvent, prevValue?) => {
-		const fieldValue = blurEvent.target.value
-		let fieldValueHasChanged = fieldValue !== prevValue
-
-		console.log({ fieldValue, prevValue })
-
-		if (fieldValueHasChanged) {
-			wishService.save()
-		}
+	const saveWish = (wish: Wish) => {
+		wishService.save(wish)
 	}
 
-	const addNewWishForm = blurEvent => {
-		const fieldIsFilled = Boolean(blurEvent.target.value)
+	const addNewWish = () => {
+		const lastWish = wishes[wishes.length - 1]
 
-		if (fieldIsFilled) {
-			wishForms = [...wishForms, WishForm]
+		if (lastWish.isEmpty()) {
+			return
 		}
 
+		wishes = [...wishes, new Wish(uuidGenerator.generate())]
 	}
 </script>
 
@@ -49,9 +50,9 @@
 <h1>Create a wish list</h1>
 
 <ul>
-	{#each wishForms as wishForm}
+	{#each wishes as wish}
 		<li>
-			<svelte:component this={wishForm} {saveWish} {addNewWishForm}/>
+			<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
 		</li>
 	{/each}
 </ul>

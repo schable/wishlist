@@ -1,27 +1,45 @@
-<script>
+<script lang='ts'>
+	export let saveWish
+	export let addNewWish
+	export let wish: Wish
+
 	import { Wish } from '../_entities/Wish'
 
-	export let saveWish
-	export let addNewWishForm
+	let valuesBeforeUpdate = {} as Wish
+	const setValueBeforeUpdate = (event) => {
+		const previousFieldValue = event.target.value
+		const fieldName = event.target.name
+		valuesBeforeUpdate[fieldName] = previousFieldValue
+	}
 
-	let { comment, name, price, url } = new Wish()
+	const saveWishOnValueChange = event => {
+		const fieldValue = event.target.value
+		const fieldName = event.target.name
+		const fieldValueHasNotChanged = fieldValue === valuesBeforeUpdate[fieldName]
+
+		if (fieldValueHasNotChanged) {
+			return
+		}
+
+		return saveWish(wish)
+	}
 </script>
 
 <form action='' method='post'>
 	<label>
 		Name
-		<input type='text' bind:value={name} on:blur={event => saveWish(event, name)} on:blur={addNewWishForm} />
+		<input type='text' name='name' bind:value={wish.name} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} on:blur={addNewWish} />
 	</label>
 	<label>
 		Price
-		<input type='number' bind:value={price} on:blur={event => saveWish(event, price)} />
+		<input type='number' name='price' bind:value={wish.price} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
 	</label>
 	<label>
 		Comment
-		<input type='text' bind:value={comment} on:blur={event => saveWish(event, comment)} />
+		<input type='text' name='comment' bind:value={wish.comment} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
 	</label>
 	<label>
 		URL
-		<input type='url' bind:value={url} on:blur={event => saveWish(event, url)} />
+		<input type='url' name='url' bind:value={wish.url} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
 	</label>
 </form>
