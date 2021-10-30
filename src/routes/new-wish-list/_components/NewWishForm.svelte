@@ -1,11 +1,12 @@
 <script lang='ts'>
+	import { Wish } from '../_entities/Wish'
+
 	export let saveWish
 	export let addNewWish
 	export let wish: Wish
 
-	import { Wish } from '../_entities/Wish'
-
 	let valuesBeforeUpdate = {} as Wish
+
 	const setValueBeforeUpdate = (event) => {
 		const previousFieldValue = event.target.value
 		const fieldName = event.target.name

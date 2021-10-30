@@ -1,16 +1,12 @@
 <script context='module' lang='ts'>
 	import type { LoadOutput } from '@sveltejs/kit'
-
-	import { WishService } from '../../services/wishService'
 	import { UuidGenerator } from '../../helpers/UuidGenerator'
 
 	export function load(): LoadOutput {
-		const wishService = new WishService()
 		const uuidGenerator = new UuidGenerator()
 
 		return {
 			props: {
-				wishService,
 				uuidGenerator,
 			},
 		}
@@ -18,26 +14,27 @@
 </script>
 
 <script lang='ts'>
-	export let wishService: WishService
+	import WishForm from './_components/NewWishForm.svelte'
+	import { WishList } from './_entities/WishList'
+	import { Wish } from './_entities/Wish'
+	import { onMount } from 'svelte'
+	import { goto } from '$app/navigation'
+
 	export let uuidGenerator: UuidGenerator
 
-	import WishForm from './_components/NewWishForm.svelte'
-	import { Wish } from './_entities/Wish'
-
-	let wishes: Wish[] = [new Wish(uuidGenerator.generate())]
-
-	const saveWish = (wish: Wish) => {
-		wishService.save(wish)
-	}
-
-	const addNewWish = () => {
-		const lastWish = wishes[wishes.length - 1]
-
-		if (lastWish.isEmpty()) {
+	// TODO: test this mechanism
+	let wishList: WishList
+	let createList = () => {
+		const currentUrl = new URL(window.location.href)
+		console.log(currentUrl.hash)
+		if (currentUrl.hash) {
 			return
 		}
 
-		wishes = [...wishes, new Wish(uuidGenerator.generate())]
+		wishList = new WishList(uuidGenerator.generate())
+		goto(currentUrl.pathname + '/' + wishList.uuid, { replaceState: true })
+		// currentUrl.pathname = currentUrl.pathname + '/'+ wishList.uuid
+		// window.history.replaceState(null, '', currentUrl)
 	}
 </script>
 
@@ -49,10 +46,14 @@
 
 <h1>Create a wish list</h1>
 
-<ul>
-	{#each wishes as wish}
-		<li>
-			<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
-		</li>
-	{/each}
-</ul>
+<label>
+	List name
+	<input type='text' name='name'>
+</label>
+
+<labe>
+	Deletion date
+	<input type='date' name='deletionDate'>
+</labe>
+
+<button on:click={createList}>Create list</button>
