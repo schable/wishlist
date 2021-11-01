@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/svelte'
 import CreateNewList from './index.svelte'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from '@jest/globals'
-import { WishService } from '../../../services/wishService'
+import { WishService } from '../../../services/WishService'
 import { UuidGenerator } from '../../../helpers/UuidGenerator'
 
 jest.mock('../../../services/wishService')

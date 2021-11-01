@@ -14,27 +14,28 @@
 </script>
 
 <script lang='ts'>
-	import WishForm from './_components/NewWishForm.svelte'
-	import { WishList } from './_entities/WishList'
-	import { Wish } from './_entities/Wish'
-	import { onMount } from 'svelte'
+	import { WishList } from '../../models/WishList'
 	import { goto } from '$app/navigation'
+	import { Encryptor } from '../../helpers/Encryptor'
+	import { WishListService } from '../../services/WishListService'
 
 	export let uuidGenerator: UuidGenerator
 
-	// TODO: test this mechanism
-	let wishList: WishList
-	let createList = () => {
+	let wishList = new WishList(uuidGenerator.generate())
+
+	let createList = async () => {
 		const currentUrl = new URL(window.location.href)
-		console.log(currentUrl.hash)
 		if (currentUrl.hash) {
 			return
 		}
+		const encryptor = await Encryptor.new()
+		const encyptionKey = await encryptor.getEncryptionKeyForUrl()
 
-		wishList = new WishList(uuidGenerator.generate())
-		goto(currentUrl.pathname + '/' + wishList.uuid, { replaceState: true })
-		// currentUrl.pathname = currentUrl.pathname + '/'+ wishList.uuid
-		// window.history.replaceState(null, '', currentUrl)
+		const wishListService = new WishListService(encryptor)
+
+		await wishListService.save(wishList)
+
+		await goto(currentUrl.pathname + '/' + wishList.uuid + '#' + encyptionKey, { replaceState: true })
 	}
 </script>
 
@@ -46,14 +47,18 @@
 
 <h1>Create a wish list</h1>
 
-<label>
-	List name
-	<input type='text' name='name'>
-</label>
+<form on:submit|preventDefault={createList}>
+	<label>
+		List name
+		<input type='text' name='name' bind:value={wishList.name}>
+	</label>
 
-<labe>
-	Deletion date
-	<input type='date' name='deletionDate'>
-</labe>
+	<labe>
+		Deletion date
+		<input type='date' name='deletionDate' bind:value={wishList.deletionDate}>
+	</labe>
 
-<button on:click={createList}>Create list</button>
+	<button type='submit'>Create list</button>
+</form>
+
+<p>The list will be saved when the first item is added</p>

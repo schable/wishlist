@@ -1,17 +1,15 @@
 <script context='module' lang='ts'>
 	import type { LoadOutput } from '@sveltejs/kit'
 
-	import { WishService } from '../../../services/wishService'
 	import { UuidGenerator } from '../../../helpers/UuidGenerator'
 
-	export function load(): LoadOutput {
-		const wishService = new WishService()
+	export async function load({ page }): Promise<LoadOutput> {
 		const uuidGenerator = new UuidGenerator()
 
 		return {
 			props: {
-				wishService,
 				uuidGenerator,
+				listUuid: page.params.listUuid,
 			},
 		}
 	}
@@ -19,12 +17,24 @@
 
 <script lang='ts'>
 	import WishForm from '../_components/NewWishForm.svelte'
-	import { Wish } from '../_entities/Wish'
+	import { Wish } from '../../../models/Wish'
+	import { onMount } from 'svelte'
+	import { WishService } from '../../../services/WishService'
+	import { WishList } from '../../../models/WishList'
+	import { Encryptor } from '../../../helpers/Encryptor'
 
-	export let wishService: WishService
 	export let uuidGenerator: UuidGenerator
+	export let listUuid: string
 
-	let wishes: Wish[] = [new Wish(uuidGenerator.generate())]
+	let wishList: WishList = new WishList(listUuid)
+	let wishes: Wish[] = [new Wish(uuidGenerator.generate(), wishList.uuid)]
+	let wishService: WishService
+
+	onMount(async () => {
+		const hashWithoutHashtag = window.location.hash.slice(1)
+		const encryptor = await Encryptor.new(hashWithoutHashtag)
+		wishService = new WishService(encryptor)
+	})
 
 	const saveWish = (wish: Wish) => {
 		wishService.save(wish)
@@ -37,13 +47,13 @@
 			return
 		}
 
-		wishes = [...wishes, new Wish(uuidGenerator.generate())]
+		wishes = [...wishes, new Wish(uuidGenerator.generate(), wishList.uuid)]
 	}
 </script>
 
 
 <svelte:head>
-	<title>Create a new wish list - Wishlist</title>
+	<title>Add wishes to a new wish list - Wishlist</title>
 </svelte:head>
 
 

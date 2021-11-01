@@ -1,5 +1,5 @@
 <script lang='ts'>
-	import { Wish } from '../_entities/Wish'
+	import { Wish } from '../../../models/Wish'
 
 	export let saveWish
 	export let addNewWish

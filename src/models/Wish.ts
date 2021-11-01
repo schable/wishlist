@@ -1,14 +1,16 @@
 export class Wish {
-	reserved: boolean = false
+	reserved = false
 
 	constructor(
 		public uuid: string,
+		public listUuid: string,
 		public comment?: string,
 		public name?: string,
 		public price?: number,
 		public url?: string,
 	) {
 		this.uuid = uuid
+		this.listUuid = listUuid
 		this.comment = comment
 		this.name = name
 		this.price = price
