@@ -1,6 +1,6 @@
 import type { CipherData } from 'easy-web-crypto'
-import { encrypt, exportKey, genAESKey, importKey } from 'easy-web-crypto'
-import type { WishList } from '../models/WishList'
+import { decrypt, encrypt, exportKey, genAESKey, importKey } from 'easy-web-crypto'
+import { WishList } from '../models/WishList'
 import { EncryptedWishList } from '../services/entities/EncryptedWishList'
 import type { Wish } from '../models/Wish'
 import { EncryptedWish } from '../services/entities/EncryptedWish'
@@ -46,12 +46,20 @@ export class Encryptor {
 		return data ? await encrypt(this.aesEncryptionKey, data) : Promise.resolve(undefined)
 	}
 
+	private async decrypt(data: CipherData) {
+		return await decrypt(this.aesEncryptionKey, data)
+	}
+
 	async fromWishList(wishList: WishList): Promise<EncryptedWishList> {
-		const encryptedWishList = new EncryptedWishList()
-		encryptedWishList.uuid = wishList.uuid
-		encryptedWishList.deletionDate = wishList.deletionDate
-		encryptedWishList.name = await this.encrypt(wishList.name)
-		return encryptedWishList
+		const encryptedWishListName = await this.encrypt(wishList.name)
+		return new EncryptedWishList(wishList.uuid, wishList.deletionDate, encryptedWishListName)
+	}
+
+	async toWishList(encryptedWishList: EncryptedWishList): Promise<WishList> {
+		const wishList = new WishList(encryptedWishList.uuid)
+		wishList.deletionDate = encryptedWishList.deletionDate
+		wishList.name = await this.decrypt(encryptedWishList.name)
+		return wishList
 	}
 
 	async fromWish(wish: Wish): Promise<EncryptedWish> {
@@ -65,5 +73,4 @@ export class Encryptor {
 		encryptedWish.url = await this.encrypt(wish.url)
 		return encryptedWish
 	}
-
 }

@@ -12,4 +12,6 @@ export class WishService {
 		const encryptedWish = await this.encryptor.fromWish(wish)
 		console.log('encrypted wish saved', encryptedWish)
 	}
+
+
 }

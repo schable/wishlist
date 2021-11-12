@@ -5,23 +5,28 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from '@jest/globals'
 import { WishService } from '../../../services/WishService'
 import { UuidGenerator } from '../../../helpers/UuidGenerator'
+import  { Encryptor } from '../../../helpers/Encryptor'
 
+jest.mock('../../../helpers/Encryptor')
 jest.mock('../../../services/wishService')
 jest.mock('../../../helpers/UuidGenerator')
 
 const GENERATED_UUID = 'universally-unique-identifier'
 
 describe('New wish list', () => {
-	let mockedWishService
+	let mockWishService
 	let mockedUuidGenerator
 	beforeEach(() => {
-		mockedWishService = new WishService()
+		window.location.hash='#jdfbJbe_jdSA'
 		mockedUuidGenerator = new UuidGenerator()
+		const encryptor = new Encryptor({extractable: true} as CryptoKey)
+		jest.spyOn(Encryptor, 'new').mockResolvedValue(encryptor)
+		mockWishService = new WishService(encryptor)
 		jest.spyOn(mockedUuidGenerator, 'generate').mockReturnValue(GENERATED_UUID)
 	})
 
 	const renderCreateNewList = () => {
-		render(CreateNewList, { wishService: mockedWishService, uuidGenerator: mockedUuidGenerator })
+		render(CreateNewList, { listUuid: 'list-uuid', uuidGenerator: mockedUuidGenerator })
 	}
 
 	describe('Wish item', () => {
@@ -98,7 +103,7 @@ describe('New wish list', () => {
 				await userEvent.tab()
 
 				// Then
-				expect(mockedWishService.save).toHaveBeenCalledWith({
+				expect(mockWishService.save).toHaveBeenCalledWith({
 					comment: undefined,
 					name: undefined,
 					price: undefined,
@@ -129,7 +134,7 @@ describe('New wish list', () => {
 				await userEvent.tab()
 
 				// Then
-				expect(mockedWishService.save).toHaveBeenCalledTimes(1)
+				expect(mockWishService.save).toHaveBeenCalledTimes(1)
 			},
 		)
 	})
