@@ -8,6 +8,7 @@ const dbClient = new Client({
 	password: 'wishlistpassword',
 	port: 5432,
 })
+
 dbClient.connect()
 	.then(() => {
 		console.log('connected')
@@ -18,3 +19,5 @@ export async function handle({ request, resolve }): Promise<ServerResponse> {
 	request.locals.dbClient = dbClient
 	return resolve(request)
 }
+
+export type locals = { dbClient: typeof dbClient }

@@ -4,13 +4,13 @@ import type { EncryptedWishList } from './entities/EncryptedWishList'
 import { EncryptedWishListApi } from './dtos/EncryptedWishListApi'
 
 export class WishListService {
-	encryptor
+	private encryptor
 
 	constructor(encryptor: Encryptor) {
 		this.encryptor = encryptor
 	}
 
-	async save(wishList: WishList): Promise<void> {
+	public async save(wishList: WishList): Promise<void> {
 		const encryptedWishList: EncryptedWishList = await this.encryptor.fromWishList(wishList)
 
 		try {
@@ -26,7 +26,7 @@ export class WishListService {
 		}
 	}
 
-	static async getEncrypted(wishListId: string, svelteFetch: typeof fetch): Promise<EncryptedWishList> {
+	public static async getEncrypted(wishListId: string, svelteFetch: typeof fetch): Promise<EncryptedWishList> {
 		const response = await svelteFetch(`http://localhost:3000/api/new-wish-list/${wishListId}`, {
 			method: 'GET',
 			headers: {

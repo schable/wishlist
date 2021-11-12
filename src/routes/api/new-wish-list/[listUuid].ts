@@ -1,7 +1,5 @@
 import type { EndpointOutput, Request } from '@sveltejs/kit'
-
-
-type locals = { dbClient }
+import type { locals } from '../../../hooks'
 
 type postWishListBody = { deletionDate: Date, name: string }
 

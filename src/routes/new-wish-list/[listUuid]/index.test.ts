@@ -107,7 +107,7 @@ describe('New wish list', () => {
 					comment: undefined,
 					name: undefined,
 					price: undefined,
-					reserved: false,
+					available: true,
 					url: undefined,
 					uuid: GENERATED_UUID,
 					[fieldName]: valueToSave,

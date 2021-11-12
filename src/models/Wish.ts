@@ -1,5 +1,5 @@
 export class Wish {
-	reserved = false
+	available = true
 
 	constructor(
 		public uuid: string,

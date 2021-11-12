@@ -3,15 +3,18 @@
 
 	import { UuidGenerator } from '../../../helpers/UuidGenerator'
 	import { WishListService } from '../../../services/WishListService'
+	import { WishService } from '../../../services/WishService'
 
 	export async function load({ page, fetch }): Promise<LoadOutput> {
 		const uuidGenerator = new UuidGenerator()
 		const encryptedWishList = await WishListService.getEncrypted(page.params.listUuid, fetch)
+		const encryptedWishes = await WishService.getAllEncryptedForList(page.params.listUuid, fetch)
 
 		return {
 			props: {
 				uuidGenerator,
 				encryptedWishList,
+				encryptedWishes,
 			},
 		}
 	}
@@ -21,13 +24,15 @@
 	import WishForm from '../_components/NewWishForm.svelte'
 	import { Wish } from '../../../models/Wish'
 	import { onMount } from 'svelte'
-	import { WishService } from '../../../services/WishService'
 	import { WishList } from '../../../models/WishList'
 	import { Encryptor } from '../../../helpers/Encryptor'
 	import { EncryptedWishList } from '../../../services/entities/EncryptedWishList'
+	import { EncryptedWish } from '../../../services/entities/EncryptedWish'
+	import EncryptedWishForm from '../_components/EncryptedWishForm.svelte'
 
 	export let uuidGenerator: UuidGenerator
 	export let encryptedWishList: EncryptedWishList
+	export let encryptedWishes: EncryptedWish[]
 
 	let wishes: Wish[] = [new Wish(uuidGenerator.generate(), encryptedWishList.uuid)]
 	let wishService: WishService
@@ -38,7 +43,18 @@
 		const encryptor = await Encryptor.new(encryptionKey)
 		wishService = new WishService(encryptor)
 
-		wishList = await encryptor.toWishList(encryptedWishList)
+		encryptor.toWishList(encryptedWishList).then((decryptedWishList) => {
+			wishList = decryptedWishList
+		})
+
+		encryptedWishes.map((encryptedWish, index) => {
+			return encryptor.toWish(encryptedWish)
+				.then(decryptedWish => {
+					encryptedWishes.splice(index)
+					encryptedWishes = encryptedWishes
+					wishes = [decryptedWish, ...wishes]
+				})
+		})
 	})
 
 	const saveWish = (wish: Wish) => {
@@ -65,8 +81,14 @@
 <h1>Create a wish list</h1>
 
 <h2>{wishList ? wishList.name : `${encryptedWishList.name.ciphertext} 🔒`}</h2>
+<p>This wish list will be deleted on {encryptedWishList.deletionDate.toLocaleDateString()} </p>
 
 <ul>
+	{#each encryptedWishes as encryptedWish}
+		<li>
+			<svelte:component this={EncryptedWishForm} {encryptedWish} />
+		</li>
+	{/each}
 	{#each wishes as wish}
 		<li>
 			<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
