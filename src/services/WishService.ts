@@ -15,7 +15,7 @@ export class WishService {
 		const encryptedWishApi = EncryptedWishApi.fromEncryptedWish(encryptedWish)
 
 		try {
-			await fetch(`http://localhost:3000/api/new-wish`, {
+			await fetch(`/api/wish/${encryptedWishApi.id}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -23,12 +23,12 @@ export class WishService {
 				body: JSON.stringify(encryptedWishApi),
 			})
 		} catch (error) {
-			console.log('ERROR WHILE SAVING LIST', error)
+			console.log('ERROR WHILE SAVING WISH', error)
 		}
 	}
 
 	public static async getAllEncryptedForList(listUuid: string, svelteFetch: typeof fetch): Promise<EncryptedWish[]> {
-		const response = await svelteFetch(`http://localhost:3000/api/wish-list/${listUuid}/wish`, {
+		const response = await svelteFetch(`/api/wish-list/${listUuid}/wish`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

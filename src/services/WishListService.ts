@@ -14,7 +14,7 @@ export class WishListService {
 		const encryptedWishList: EncryptedWishList = await this.encryptor.fromWishList(wishList)
 
 		try {
-			await fetch(`http://localhost:3000/api/new-wish-list/${encryptedWishList.uuid}`, {
+			await fetch(`/api/wish-list/${encryptedWishList.uuid}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export class WishListService {
 	}
 
 	public static async getEncrypted(wishListId: string, svelteFetch: typeof fetch): Promise<EncryptedWishList> {
-		const response = await svelteFetch(`http://localhost:3000/api/new-wish-list/${wishListId}`, {
+		const response = await svelteFetch(`/api/wish-list/${wishListId}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

@@ -21,14 +21,15 @@
 </script>
 
 <script lang='ts'>
-	import WishForm from '../_components/NewWishForm.svelte'
+	import WishForm from './_components/NewWishForm.svelte'
 	import { Wish } from '../../../models/Wish'
 	import { onMount } from 'svelte'
 	import { WishList } from '../../../models/WishList'
 	import { Encryptor } from '../../../helpers/Encryptor'
 	import { EncryptedWishList } from '../../../services/entities/EncryptedWishList'
 	import { EncryptedWish } from '../../../services/entities/EncryptedWish'
-	import EncryptedWishForm from '../_components/EncryptedWishForm.svelte'
+	import EncryptedWishForm from './_components/EncryptedWishForm.svelte'
+	import { toEncryptedText } from '../../../helpers/utils/toEncryptedText'
 
 	export let uuidGenerator: UuidGenerator
 	export let encryptedWishList: EncryptedWishList
@@ -80,7 +81,7 @@
 
 <h1>Create a wish list</h1>
 
-<h2>{wishList ? wishList.name : `${encryptedWishList.name.ciphertext} 🔒`}</h2>
+<h2>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h2>
 <p>This wish list will be deleted on {encryptedWishList.deletionDate.toLocaleDateString()} </p>
 
 <ul>

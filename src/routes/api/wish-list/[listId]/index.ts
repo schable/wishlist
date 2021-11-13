@@ -1,5 +1,5 @@
 import type { EndpointOutput, Request } from '@sveltejs/kit'
-import type { locals } from '../../../hooks'
+import type { locals } from '../../../../hooks'
 
 type postWishListBody = { deletionDate: Date, name: string }
 
@@ -8,13 +8,13 @@ export const post = async ({
 														 params,
 														 locals,
 													 }: Request<locals, postWishListBody>): Promise<EndpointOutput> => {
-	const { listUuid } = params
+	const { listId } = params
 	const { dbClient } = locals
 	const { deletionDate, name } = body
 
 	const query = {
 		text: 'INSERT INTO wishlist (id, deletionDate, name) VALUES ($1, $2, $3)',
-		values: [listUuid, deletionDate, name],
+		values: [listId, deletionDate, name],
 	}
 
 	await dbClient.query(query)
@@ -25,11 +25,11 @@ export const post = async ({
 }
 
 export const get = async ({ params, locals }: Request<locals>): Promise<EndpointOutput> => {
-	const { listUuid } = params
+	const { listId } = params
 	const { dbClient } = locals
 	const query = {
 		text: 'SELECT * FROM wishlist WHERE id = $1',
-		values: [listUuid],
+		values: [listId],
 	}
 
 	const wishListQuery = await dbClient.query(query)

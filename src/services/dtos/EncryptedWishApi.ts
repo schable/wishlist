@@ -2,7 +2,7 @@ import { EncryptedWish } from '../entities/EncryptedWish'
 
 export class EncryptedWishApi {
 	id: string
-	list_uuid: string
+	list_id: string
 	available: boolean
 	comment: string
 	name: string
@@ -11,7 +11,7 @@ export class EncryptedWishApi {
 
 	constructor(id: string, list_uuid: string, available: boolean, name: string, comment?: string, price?: string, url?: string) {
 		this.id = id
-		this.list_uuid = list_uuid
+		this.list_id = list_uuid
 		this.available = available
 		this.comment = comment
 		this.name = name
@@ -19,12 +19,12 @@ export class EncryptedWishApi {
 		this.url = url
 	}
 
-	static toEncryptedWish({ id, list_uuid, available, comment, name, price, url }: EncryptedWishApi): EncryptedWish {
+	static toEncryptedWish({ id, list_id, available, comment, name, price, url }: EncryptedWishApi): EncryptedWish {
 		const nameCipher = JSON.parse(name)
 		const commentCipher = JSON.parse(comment)
 		const priceCipher = JSON.parse(price)
 		const urlCipher = JSON.parse(url)
-		return new EncryptedWish(id, list_uuid, available, nameCipher, commentCipher, priceCipher, urlCipher)
+		return new EncryptedWish(id, list_id, available, nameCipher, commentCipher, priceCipher, urlCipher)
 	}
 
 	static fromEncryptedWish(encryptedWish: EncryptedWish): EncryptedWishApi {

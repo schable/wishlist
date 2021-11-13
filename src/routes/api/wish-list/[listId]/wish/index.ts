@@ -4,7 +4,7 @@ export const get = async ({ params, locals }: Request<{ dbClient }>): Promise<En
 	const { listId } = params
 	const { dbClient } = locals
 	const query = {
-		text: 'SELECT * FROM wish WHERE list_uuid = $1',
+		text: 'SELECT * FROM wish WHERE list_id = $1',
 		values: [listId],
 	}
 
