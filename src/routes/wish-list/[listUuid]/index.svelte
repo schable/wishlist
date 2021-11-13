@@ -21,30 +21,25 @@
 </script>
 
 <script lang='ts'>
-	import WishForm from './_components/NewWishForm.svelte'
+	import WishComponent from './_components/Wish.svelte'
 	import { Wish } from '../../../models/Wish'
 	import { onMount } from 'svelte'
 	import { WishList } from '../../../models/WishList'
 	import { Encryptor } from '../../../helpers/Encryptor'
 	import { EncryptedWishList } from '../../../services/entities/EncryptedWishList'
 	import { EncryptedWish } from '../../../services/entities/EncryptedWish'
-	import EncryptedWishForm from './_components/EncryptedWishForm.svelte'
+	import EncryptedWishComponent from './_components/EncryptedWish.svelte'
 	import { toEncryptedText } from '../../../helpers/utils/toEncryptedText'
-	import { getEncryptedEmoji } from '../../../helpers/utils/getEncryptedEmoji'
-	import { getWishListSharingLink } from '../../../helpers/utils/getWishListSharingLink'
 
-	export let uuidGenerator: UuidGenerator
 	export let encryptedWishList: EncryptedWishList
 	export let encryptedWishes: EncryptedWish[]
 
-	let wishes: Wish[] = [new Wish(uuidGenerator.generate(), encryptedWishList.uuid)]
-	let wishService: WishService
 	let wishList: WishList
-	let sharingLink: string
+	let wishes: Wish[] = []
+	let wishService: WishService
 
 	onMount(async () => {
 		const encryptionKey = window.location.hash.slice(1)
-		sharingLink = getWishListSharingLink()
 		const encryptor = await Encryptor.new(encryptionKey)
 		wishService = new WishService(encryptor)
 
@@ -62,47 +57,31 @@
 		})
 	})
 
-	const saveWish = (wish: Wish) => {
-		wishService.save(wish)
-	}
-
-	const addNewWish = () => {
-		const lastWish = wishes[wishes.length - 1]
-
-		if (lastWish.isEmpty()) {
-			return
-		}
-
-		wishes = [...wishes, new Wish(uuidGenerator.generate(), wishList.uuid)]
+	const saveWishAvailability = (wish: Wish) => {
+		wishService.saveAvailability(wish)
 	}
 </script>
 
 
 <svelte:head>
-	<title>Add wishes to a new wish list - Wishlist</title>
+	<title>View wish list - Wishlist</title>
 </svelte:head>
 
 
-<h1>Create a wish list</h1>
+<h1>View wish list</h1>
 
 <h2>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h2>
 <p>This wish list will be deleted on {encryptedWishList.deletionDate.toLocaleDateString()} </p>
-<p>Sharing link :
-	{#if sharingLink}
-		<a href={sharingLink}>{sharingLink}</a>
-	{:else}
-		{getEncryptedEmoji()}
-	{/if}
-</p>
+
 <ul>
 	{#each encryptedWishes as encryptedWish}
 		<li>
-			<svelte:component this={EncryptedWishForm} {encryptedWish} />
+			<svelte:component this={EncryptedWishComponent} {encryptedWish} />
 		</li>
 	{/each}
 	{#each wishes as wish}
 		<li>
-			<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
+			<svelte:component this={WishComponent} {wish} {saveWishAvailability} />
 		</li>
 	{/each}
 </ul>

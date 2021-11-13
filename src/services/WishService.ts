@@ -16,7 +16,7 @@ export class WishService {
 
 		try {
 			await fetch(`/api/wish/${encryptedWishApi.id}`, {
-				method: 'POST',
+				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -26,6 +26,24 @@ export class WishService {
 			console.log('ERROR WHILE SAVING WISH', error)
 		}
 	}
+
+	async saveAvailability(wish: Wish): Promise<void> {
+		const encryptedWish = await this.encryptor.fromWish(wish)
+		const encryptedWishApi = EncryptedWishApi.fromEncryptedWish(encryptedWish)
+
+		try {
+			await fetch(`/api/wish/${encryptedWishApi.id}?availabilityOnly=true`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(encryptedWishApi),
+			})
+		} catch (error) {
+			console.log('ERROR WHILE UPDATING WISH', error)
+		}
+	}
+
 
 	public static async getAllEncryptedForList(listUuid: string, svelteFetch: typeof fetch): Promise<EncryptedWish[]> {
 		const response = await svelteFetch(`/api/wish-list/${listUuid}/wish`, {

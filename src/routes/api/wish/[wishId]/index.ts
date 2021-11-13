@@ -25,13 +25,33 @@ type postWishBody = {
 	price: string
 	url: string
 }
-export const post = async ({
-														 body,
-														 locals,
-														 params,
-													 }: Request<locals, postWishBody>): Promise<EndpointOutput> => {
-	const { wishId } = params
-	const { dbClient } = locals
+
+const updateFieldAvailable = async (body: postWishBody, wishId: string, dbClient) => {
+	const {
+		available,
+	} = body
+
+	const dbQuery = {
+		text: `UPDATE wish
+           SET available = $2
+           WHERE wish."id" = $1
+             AND available != $2 `,
+		values: [
+			wishId,
+			available,
+		],
+	}
+
+	const updatedRows = await dbClient.query(dbQuery)
+
+	const availabilityStateUnchanged = updatedRows.rowCount === 0
+
+	return {
+		status: availabilityStateUnchanged ? 409 : 204,
+	}
+}
+
+const upsertAllFields = async (body: postWishBody, wishId: string, dbClient) => {
 	const {
 		list_id,
 		available,
@@ -43,10 +63,11 @@ export const post = async ({
 
 	const query = {
 		text: `INSERT INTO wish (id, list_id, available, comment, name, price, url)
-           VALUES ($1, $2, $3, $4, $5, $6, $7)
-           ON CONFLICT ON CONSTRAINT wish_pkey
-           DO UPDATE SET list_id = $2, available = $3, comment = $4, name = $5, price = $6, url = $7
-           WHERE wish."id" = $1`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT
+           ON CONSTRAINT wish_pkey
+               DO
+    UPDATE SET list_id = $2, available = $3, comment = $4, name = $5, price = $6, url = $7
+    WHERE wish."id" = $1`,
 		values: [
 			wishId,
 			list_id,
@@ -63,4 +84,20 @@ export const post = async ({
 	return {
 		status: 201,
 	}
+}
+
+export const put = async ({
+														body,
+														locals,
+														params,
+														query,
+													}: Request<locals, postWishBody>): Promise<EndpointOutput> => {
+	const { wishId } = params
+	const { dbClient } = locals
+	const updateOnlyAvailableField = query.get('availabilityOnly') === 'true'
+
+	if (updateOnlyAvailableField) {
+		return await updateFieldAvailable(body, wishId, dbClient)
+	}
+	return await upsertAllFields(body, wishId, dbClient)
 }
