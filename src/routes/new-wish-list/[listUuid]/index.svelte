@@ -98,7 +98,10 @@
 		<div>
 			<div class='flex justify-between items-baseline pb-2'>
 				<p>{$translatedText.newWishPage.sharingLink}</p>
-				<button title={$translatedText.newWishPage.sharingLinkCopy} on:click={copySharingLinkToClipboard}>📋</button>
+				<button title={$translatedText.newWishPage.sharingLinkCopy} on:click={copySharingLinkToClipboard}>
+					<span aria-hidden='true'>📋</span>
+					<span class='screen-reader'>{$translatedText.newWishPage.sharingLinkCopy}</span>
+				</button>
 			</div>
 			<p class='text-sm bg-gray-900 text-green-100 rounded p-1'>
 				{#if sharingLink}
@@ -122,3 +125,17 @@
 		{/each}
 	</ul>
 </main>
+
+<style>
+    .screen-reader {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+</style>
