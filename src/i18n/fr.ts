@@ -20,4 +20,15 @@ export const frenchText: GenericText = {
 		wishComment: 'Commentaire',
 		wishUrl: 'URL',
 	},
+	viewListPage: {
+		pageTitle: 'Voir une liste - Wishlist',
+		wishName: 'Nom',
+		wishPrice: 'Prix',
+		wishComment: 'Commentaire',
+		missingComment: 'Pas de commentaire',
+		wishUrl: 'Voir (nouvel onglet)',
+		missingUrl: 'Pas de lien',
+		bookAction: 'Je l’offre !',
+		bookedAction: 'Réservé',
+	}
 }

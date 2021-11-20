@@ -1,6 +1,7 @@
 export interface GenericText {
 	newListPage: newListPageText
 	newWishPage: newWishPageText
+	viewListPage: viewListPageText
 }
 
 interface newListPageText {
@@ -22,4 +23,16 @@ interface newWishPageText {
 	wishPrice: string
 	wishComment: string
 	wishUrl: string
+}
+
+interface viewListPageText {
+	pageTitle: string
+	wishName: string
+	wishPrice: string
+	wishComment: string
+	missingComment: string
+	wishUrl: string
+	missingUrl: string
+	bookAction: string
+	bookedAction: string
 }

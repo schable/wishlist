@@ -30,6 +30,7 @@
 	import { EncryptedWish } from '../../../services/entities/EncryptedWish'
 	import EncryptedWishComponent from './_components/EncryptedWish.svelte'
 	import { toEncryptedText } from '../../../helpers/utils/toEncryptedText'
+	import { translatedText } from '../../../stores/translatedText'
 
 	export let encryptedWishList: EncryptedWishList
 	export let encryptedWishes: EncryptedWish[]
@@ -64,24 +65,22 @@
 
 
 <svelte:head>
-	<title>View wish list - Wishlist</title>
+	<title>{$translatedText.viewListPage.pageTitle}</title>
 </svelte:head>
 
+<main class='bg-gray-50 text-gray-900 h-screen'>
+	<h1 class='text-xl font-mono text-center bg-gray-900 text-green-100 rounded-b-2xl p-4 truncate'>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h1>
 
-<h1>View wish list</h1>
-
-<h2>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h2>
-<p>This wish list will be deleted on {encryptedWishList.deletionDate.toLocaleDateString()} </p>
-
-<ul>
-	{#each encryptedWishes as encryptedWish}
-		<li>
-			<svelte:component this={EncryptedWishComponent} {encryptedWish} />
-		</li>
-	{/each}
-	{#each wishes as wish}
-		<li>
-			<svelte:component this={WishComponent} {wish} {saveWishAvailability} />
-		</li>
-	{/each}
-</ul>
+	<ul class='grid grid-cols-2 auto-rows-min gap-2 overflow-y-auto p-2'>
+		{#each encryptedWishes as encryptedWish}
+			<li class='p-2 bg-green-400 rounded-lg shadow-md'  class:opacity-50={!encryptedWish.available}>
+				<svelte:component this={EncryptedWishComponent} {encryptedWish} />
+			</li>
+		{/each}
+		{#each wishes as wish}
+			<li class='p-2 bg-green-400 rounded-lg shadow-md' class:opacity-50={!wish.available}>
+				<svelte:component this={WishComponent} {wish} {saveWishAvailability} />
+			</li>
+		{/each}
+	</ul>
+</main>

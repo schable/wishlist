@@ -19,5 +19,16 @@ export const englishText: GenericText = {
 		wishPrice: 'Price',
 		wishComment: 'Comment',
 		wishUrl: 'URL',
+	},
+	viewListPage: {
+		pageTitle: 'View a list - Wishlist',
+		wishName: 'Name',
+		wishPrice: 'Price',
+		wishComment: 'Comment',
+		missingComment: 'No comment',
+		wishUrl: 'Check it out (new tab)',
+		missingUrl: 'No link',
+		bookAction: 'I’m offering it!',
+		bookedAction: 'Booked',
 	}
 }
