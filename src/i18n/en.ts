@@ -1,7 +1,7 @@
 import type { GenericText } from './generic'
 
 export const englishText: GenericText = {
-	list: {
+	newListPage: {
 		pageTitle: 'Create a new wish list - Wishlist',
 		title: 'Create a wish list',
 		listTitle: 'List name',
@@ -9,5 +9,14 @@ export const englishText: GenericText = {
 		listDeletionDate: 'Deletion date',
 		listDeletionDateDetails: 'The date at which the list will be deleted. This information is stored unencrypted on our servers.',
 		listSubmitButton: 'Create my list',
+	},
+	newWishPage: {
+		pageTitle: 'Add wishes to my wish list - Wishlist',
+		listDeletionDateDetails: 'Deletion on',
+		sharingLink: 'Sharing link:',
+		wishName: 'Name',
+		wishPrice: 'Price',
+		wishComment: 'Comment',
+		wishUrl: 'URL',
 	}
 }

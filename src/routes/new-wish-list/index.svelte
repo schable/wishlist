@@ -42,23 +42,23 @@
 
 
 <svelte:head>
-	<title>{$translatedText.list.pageTitle}</title>
+	<title>{$translatedText.newListPage.pageTitle}</title>
 </svelte:head>
 
 <main class='h-screen grid grid-cols-1 pt-8 bg-gray-50 text-gray-900'>
-	<h1 class='text-xl font-mono text-center'>{$translatedText.list.title}</h1>
+	<h1 class='text-xl font-mono text-center'>{$translatedText.newListPage.title}</h1>
 
 	<form on:submit|preventDefault={createList} class='grid grid-cols-1 gap-16 p-8 bg-green-400 rounded-t-2xl shadow-md'>
-		<label class='grid grid-cols-1 font-medium' title='{$translatedText.list.listTitleDetails}'>
-			{$translatedText.list.listTitle}
+		<label class='grid grid-cols-1 font-medium' title='{$translatedText.newListPage.listTitleDetails}'>
+			{$translatedText.newListPage.listTitle}
 			<input class='focus:outline-none focus:ring focus:ring-gray-900 rounded p-1 bg-green-100' type='text' name='name' bind:value={wishList.name} required>
 		</label>
 
-		<label class='grid grid-cols-1 font-medium' title='{$translatedText.list.listDeletionDateDetails}'>
-			{$translatedText.list.listDeletionDate}
+		<label class='grid grid-cols-1 font-medium' title='{$translatedText.newListPage.listDeletionDateDetails}'>
+			{$translatedText.newListPage.listDeletionDate}
 			<input class='focus:outline-none focus:ring focus:ring-gray-900 rounded p-1 bg-green-100' type='date' name='deletionDate' bind:value={wishList.deletionDate} required>
 		</label>
 
-		<button class='rounded-lg p-1 bg-gray-900 shadow text-green-100' type='submit'>{$translatedText.list.listSubmitButton}</button>
+		<button class='rounded-lg p-1 bg-gray-900 shadow text-green-100' type='submit'>{$translatedText.newListPage.listSubmitButton}</button>
 	</form>
 </main>

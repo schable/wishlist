@@ -1,8 +1,9 @@
 export interface GenericText {
-	list: ListText
+	newListPage: newListPageText
+	newWishPage: newWishPageText
 }
 
-interface ListText {
+interface newListPageText {
 	pageTitle: string
 	title: string
 	listTitle: string
@@ -10,4 +11,14 @@ interface ListText {
 	listDeletionDate: string
 	listDeletionDateDetails: string
 	listSubmitButton: string
+}
+
+interface newWishPageText {
+	pageTitle: string
+	listDeletionDateDetails: string
+	sharingLink: string
+	wishName: string
+	wishPrice: string
+	wishComment: string
+	wishUrl: string
 }

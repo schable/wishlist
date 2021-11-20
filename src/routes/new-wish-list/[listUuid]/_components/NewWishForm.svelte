@@ -1,5 +1,9 @@
 <script lang='ts'>
 	import { Wish } from '../../../../models/Wish'
+	import { translatedText } from '../../../../stores/translatedText'
+	import TextInput from '../../../../design-system/TextInput.svelte'
+	import NumberInput from '../../../../design-system/NumberInput.svelte'
+	import TextArea from '../../../../design-system/TextArea.svelte'
 
 	export let saveWish
 	export let addNewWish
@@ -24,23 +28,16 @@
 
 		return saveWish(wish)
 	}
+
+	const saveWishAndAddNewOne = event => {
+		saveWishOnValueChange(event)
+		addNewWish()
+	}
 </script>
 
-<form action='' method='post'>
-	<label>
-		Name
-		<input type='text' name='name' bind:value={wish.name} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} on:blur={addNewWish} />
-	</label>
-	<label>
-		Price
-		<input type='number' name='price' bind:value={wish.price} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
-	</label>
-	<label>
-		Comment
-		<input type='text' name='comment' bind:value={wish.comment} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
-	</label>
-	<label>
-		URL
-		<input type='url' name='url' bind:value={wish.url} on:focus={setValueBeforeUpdate} on:blur={saveWishOnValueChange} />
-	</label>
+<form class='grid grid-cols-1 gap-4'>
+	<TextInput label={$translatedText.newWishPage.wishName} name='name' bind:value={wish.name} handleFocus={setValueBeforeUpdate} handleBlur={saveWishAndAddNewOne} required/>
+	<NumberInput label={$translatedText.newWishPage.wishPrice} name='price' bind:value={wish.price} handleFocus={setValueBeforeUpdate} handleBlur={saveWishOnValueChange}/>
+	<TextArea label={$translatedText.newWishPage.wishComment} name='comment' bind:value={wish.comment} handleFocus={setValueBeforeUpdate} handleBlur={saveWishOnValueChange}/>
+	<TextInput label={$translatedText.newWishPage.wishUrl} name='url' bind:value={wish.url} handleFocus={setValueBeforeUpdate} handleBlur={saveWishOnValueChange}/>
 </form>

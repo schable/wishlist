@@ -32,6 +32,7 @@
 	import { toEncryptedText } from '../../../helpers/utils/toEncryptedText'
 	import { getEncryptedEmoji } from '../../../helpers/utils/getEncryptedEmoji'
 	import { getWishListSharingLink } from '../../../helpers/utils/getWishListSharingLink'
+	import { translatedText } from '../../../stores/translatedText'
 
 	export let uuidGenerator: UuidGenerator
 	export let encryptedWishList: EncryptedWishList
@@ -79,30 +80,41 @@
 
 
 <svelte:head>
-	<title>Add wishes to a new wish list - Wishlist</title>
+	<title>{$translatedText.newWishPage.pageTitle}</title>
 </svelte:head>
 
-
-<h1>Create a wish list</h1>
-
-<h2>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h2>
-<p>This wish list will be deleted on {encryptedWishList.deletionDate.toLocaleDateString()} </p>
-<p>Sharing link :
-	{#if sharingLink}
-		<a href={sharingLink}>{sharingLink}</a>
-	{:else}
-		{getEncryptedEmoji()}
-	{/if}
-</p>
-<ul>
-	{#each encryptedWishes as encryptedWish}
-		<li>
-			<svelte:component this={EncryptedWishForm} {encryptedWish} />
-		</li>
-	{/each}
-	{#each wishes as wish}
-		<li>
-			<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
-		</li>
-	{/each}
-</ul>
+<main class='h-screen grid grid-cols-1 grid-rows-new-wishes bg-gray-50 text-gray-900'>
+	<div class='bg-green-400 text-gray-900 rounded-b-2xl p-4 shadow-md grid grid-cols-1 auto-rows-min gap-4'>
+		<div class='flex justify-between items-baseline'>
+			<h1
+				class='text-xl font-mono'>{wishList ? wishList.name : toEncryptedText(encryptedWishList.name.ciphertext)}</h1>
+			<p
+				class='text-xs italic'>{$translatedText.newWishPage.listDeletionDateDetails} {encryptedWishList.deletionDate.toLocaleDateString()}</p>
+		</div>
+		<div>
+			<div class='flex justify-between items-baseline pb-2'>
+				<p>{$translatedText.newWishPage.sharingLink}</p>
+				<button title='Copier le lien de partage'>📋</button>
+			</div>
+			<p class='text-sm bg-gray-900 text-green-100 rounded p-1'>
+				{#if sharingLink}
+					{sharingLink}
+				{:else}
+					{getEncryptedEmoji()}
+				{/if}
+			</p>
+		</div>
+	</div>
+	<ul class='grid grid-cols-2 auto-rows-min gap-2 overflow-y-auto p-2'>
+		{#each encryptedWishes as encryptedWish}
+			<li class='p-2 bg-green-400 rounded-lg shadow-md'>
+				<svelte:component this={EncryptedWishForm} {encryptedWish} />
+			</li>
+		{/each}
+		{#each wishes as wish}
+			<li class='p-2 bg-green-400 rounded-lg shadow-md'>
+				<svelte:component this={WishForm} {wish} {saveWish} {addNewWish} />
+			</li>
+		{/each}
+	</ul>
+</main>
