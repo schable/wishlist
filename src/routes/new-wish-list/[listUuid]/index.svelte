@@ -76,6 +76,10 @@
 
 		wishes = [...wishes, new Wish(uuidGenerator.generate(), wishList.uuid)]
 	}
+
+	const copySharingLinkToClipboard = () => {
+		navigator.clipboard.writeText(sharingLink)
+	}
 </script>
 
 
@@ -94,7 +98,7 @@
 		<div>
 			<div class='flex justify-between items-baseline pb-2'>
 				<p>{$translatedText.newWishPage.sharingLink}</p>
-				<button title='Copier le lien de partage'>📋</button>
+				<button title={$translatedText.newWishPage.sharingLinkCopy} on:click={copySharingLinkToClipboard}>📋</button>
 			</div>
 			<p class='text-sm bg-gray-900 text-green-100 rounded p-1'>
 				{#if sharingLink}

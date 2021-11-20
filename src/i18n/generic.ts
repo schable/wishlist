@@ -17,6 +17,7 @@ interface newWishPageText {
 	pageTitle: string
 	listDeletionDateDetails: string
 	sharingLink: string
+	sharingLinkCopy: string
 	wishName: string
 	wishPrice: string
 	wishComment: string

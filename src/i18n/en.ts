@@ -14,6 +14,7 @@ export const englishText: GenericText = {
 		pageTitle: 'Add wishes to my wish list - Wishlist',
 		listDeletionDateDetails: 'Deletion on',
 		sharingLink: 'Sharing link:',
+		sharingLinkCopy: 'Copy sharing link to clipboard',
 		wishName: 'Name',
 		wishPrice: 'Price',
 		wishComment: 'Comment',

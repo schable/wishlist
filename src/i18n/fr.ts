@@ -14,6 +14,7 @@ export const frenchText: GenericText = {
 		pageTitle: 'Ajouter des articles à ma liste - Wishlist',
 		listDeletionDateDetails: 'Suppression le',
 		sharingLink: 'Lien de partage :',
+		sharingLinkCopy: 'Copier le lien de partage dans le presse-papier',
 		wishName: 'Nom',
 		wishPrice: 'Prix',
 		wishComment: 'Commentaire',
