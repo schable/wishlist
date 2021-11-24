@@ -103,7 +103,7 @@
 					<span class='screen-reader'>{$translatedText.newWishPage.sharingLinkCopy}</span>
 				</button>
 			</div>
-			<p class='text-sm bg-gray-900 text-green-100 rounded p-1'>
+			<p class='text-sm bg-gray-900 text-green-100 rounded p-1 break-all'>
 				{#if sharingLink}
 					{sharingLink}
 				{:else}
